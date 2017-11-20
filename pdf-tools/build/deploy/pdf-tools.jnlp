@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="pdf-tools.jnlp">
+  <information>
+    <title>pdf-tools</title>
+    <vendor>PdfMergeTools</vendor>
+    <description>PdfMergeApp</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="pdf-tools.jar" size="59221" download="eager" />
+    <jar href="libs\commons-logging-1.2.jar" size="61829" download="eager" />
+    <jar href="libs\fontbox-2.0.7.jar" size="1483253" download="eager" />
+    <jar href="libs\pdfbox-2.0.7.jar" size="2471124" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="es.cmlozano.tool.pdftools.PdfToolsApplication"  name="PdfMergeApp" />
+  <update check="background"/>
+</jnlp>

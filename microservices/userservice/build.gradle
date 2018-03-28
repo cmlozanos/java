@@ -1,27 +1,49 @@
 buildscript {
  ext {
-  springBootVersion = '2.0.0.RELEASE'
+  springBootVersion = "2.0.0.RELEASE"
+  dockerVersion = "1.2"
  }
  repositories {
   mavenCentral()
  }
  dependencies {
   classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  classpath("se.transmode.gradle:gradle-docker:${dockerVersion}")
  }
 }
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-group = 'com.example.projects'
-version = '0.0.1-SNAPSHOT'
+
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "docker"
+
+group = "com.example.projects"
+version = "1.0"
 sourceCompatibility = 1.8
 repositories {
  mavenCentral()
 }
 dependencies {
- compile('org.springframework.boot:spring-boot-starter-jdbc')
- compile('org.springframework.boot:spring-boot-starter-web')
- runtime('com.h2database:h2')
- testCompile('org.springframework.boot:spring-boot-starter-test')
+ compile("org.springframework.boot:spring-boot-starter-jdbc")
+ compile("org.springframework.boot:spring-boot-starter-web")
+ runtime("com.h2database:h2")
+ testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+
+task copyJar(type: Copy){
+	dependsOn "build"
+	from "build/libs/userservice-${project.version}.jar"
+	into "build/docker"
+}
+
+task buildDocker(type: Docker, dependsOn: copyJar){
+	baseImage "java:8"
+	runCommand("mkdir userservice")
+	addFile("userservice-${project.version}.jar")
+	workingDir("/userservice")
+	//No esta funcionando unzip , así que lo hemos hecho a mano
+	//runCommand("unzip -q userservice-${project.version}.jar")
+	entryPoint(["java", "-Xms128m", "-Xmx1024m", "-cp", "/userservice-config:.", "org.springframework.boot.loader.JarLauncher"]) 
 }
